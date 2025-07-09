@@ -13,14 +13,18 @@ def add_assistant_message(messages, text):
     messages.append(assistant_message)
 
 
-def chat(client, model, system_prompt, messages):
+def chat(client, model, messages, system_prompt=None):
+    params = {
+        "model": model,
+        "max_tokens": 100,
+        "messages": messages
+    }
+
+    if system_prompt is not None:
+        params["system"] = system_prompt
+
     try:
-        message = client.messages.create(
-            model=model,
-            max_tokens=100,
-            messages=messages,
-            system=system_prompt
-        )
+        message = client.messages.create(**params)
         return message.content[0].text
     except (anthropic.APIError,
             anthropic.OverloadedError,
@@ -46,7 +50,7 @@ def main():
         message = input("Enter message: ")
         print(message)
         add_user_message(messages, message)
-        answer = chat(client, model, system_prompt, messages)
+        answer = chat(client, model, messages, system_prompt)
         add_assistant_message(messages, answer)
         print(answer)
 
