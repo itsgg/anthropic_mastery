@@ -12,12 +12,11 @@ def add_assistant_message(messages, text):
     messages.append(assistant_message)
 
 
-def chat(client, model, messages, temperature=1.0):
+def chat(client, model, messages):
     message = client.messages.create(
         model=model,
         max_tokens=100,
-        messages=messages,
-        temperature=temperature
+        messages=messages
     )
 
     return message.content[0].text
@@ -38,7 +37,7 @@ def main():
     add_assistant_message(messages, answer)
     add_user_message(messages, "Write another sentence")
 
-    print(chat(client, model, messages, 0))
+    print(chat(client, model, messages))
 
 
 if __name__ == "__main__":
